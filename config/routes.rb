@@ -1,9 +1,5 @@
+# config/routes.rb
 Rails.application.routes.draw do
-  get 'users/index'
-  get 'users/show'
-  get 'users/new'
-  get 'users/edit'
-  get 'home/index'
   # Routes for Like resource
   resources :likes, only: [:index, :show, :create, :update, :destroy], param: :path_id
 
@@ -20,8 +16,11 @@ Rails.application.routes.draw do
   devise_for :users
 
   # Routes for Users controller
-  resources :users, only: [:index, :show, :new, :edit]
+  resources :users, only: [:show, :edit, :update]
 
-  # Root path (uncomment if needed)
+  # Custom route for follow requests
+  post 'insert_follow_request', to: 'follow_requests#create'
+
+  # Root path
   root "home#index"
 end

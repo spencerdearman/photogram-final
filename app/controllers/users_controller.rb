@@ -1,13 +1,25 @@
+# app/controllers/users_controller.rb
 class UsersController < ApplicationController
-  def index
-  end
-
   def show
-  end
-
-  def new
+    @user = User.find(params[:id])
   end
 
   def edit
+    @user = User.find(params[:id])
+  end
+
+  def update
+    @user = User.find(params[:id])
+    if @user.update(user_params)
+      redirect_to @user, notice: 'User was successfully updated.'
+    else
+      render :edit
+    end
+  end
+
+  private
+
+  def user_params
+    params.require(:user).permit(:email, :username, :private, :password, :password_confirmation, :current_password)
   end
 end

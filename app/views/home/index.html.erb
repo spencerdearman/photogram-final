@@ -1,12 +1,36 @@
 <!-- app/views/home/index.html.erb -->
-<h1>Welcome to the Home Page</h1>
-<a href="/users">All users</a>
-<a href="/photos">All public photos</a>
-
-<% if user_signed_in? %>
-  <p>Welcome, <%= current_user.email %>!</p>
-  <a href="/users/sign_out" data-method="delete" rel="nofollow">Sign out</a>
-<% else %>
-  <a href="/users/sign_in">Sign in</a>
-  <a href="/users/sign_up">Sign up</a>
+<% if flash[:notice] %>
+  <div>
+    <%= flash[:notice] %>
+  </div>
 <% end %>
+
+<h1>List of users</h1>
+
+<table border="1">
+  <thead>
+    <tr>
+      <th>Username</th>
+      <th>Private?</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @users.each do |user| %>
+      <tr>
+        <td><%= user.username %></td>
+        <td><%= user.private? ? "Yes" : "No" %></td>
+        <td>
+          <%= form_with url: insert_follow_request_path, method: :post do %>
+            <%= hidden_field_tag :query_recipient_id, user.id %>
+            <button>Follow</button>
+          <% end %>
+        </td>
+        <td>
+          <a href="<%= user_path(user) %>">Show details</a>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

@@ -1,3 +1,12 @@
 <!-- app/views/home/index.html.erb -->
 <h1>Welcome to the Home Page</h1>
 <a href="/users">All users</a>
+<a href="/photos">All public photos</a>
+
+<% if user_signed_in? %>
+  <p>Welcome, <%= current_user.email %>!</p>
+  <a href="/users/sign_out" data-method="delete" rel="nofollow">Sign out</a>
+<% else %>
+  <a href="/users/sign_in">Sign in</a>
+  <a href="/users/sign_up">Sign up</a>
+<% end %>

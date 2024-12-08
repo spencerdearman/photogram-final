@@ -1,22 +1,26 @@
+<!-- app/views/layouts/application.html.erb -->
 <!DOCTYPE html>
 <html>
   <head>
     <title>Photogram Final</title>
-    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
   </head>
 
   <body>
     <ul>
-      <li><a href="/users">All users</a></li>
+      <li><a href="<%= root_path %>">All users</a></li>
       <li><a href="/photos">All public photos</a></li>
 
       <% if user_signed_in? %>
         <li>Welcome, <%= current_user.email %>!</li>
-        <li><a href="/users/edit"><%= current_user.username %></a></li>
-        <li><a href="/users/sign_out" data-method="delete" rel="nofollow">Sign out</a></li>
+        <li><a href="<%= edit_user_registration_path %>"><%= current_user.username %></a></li>
+        <li>
+          <%= link_to 'Sign out', destroy_user_session_path, method: :delete, data: { turbo: false } %>
+        </li>
       <% else %>
-        <li><a href="/users/sign_in">Sign in</a></li>
-        <li><a href="/users/sign_up">Sign up</a></li>
+        <li><a href="<%= new_user_session_path %>">Sign in</a></li>
+        <li><a href="<%= new_user_registration_path %>">Sign up</a></li>
       <% end %>
     </ul>
 

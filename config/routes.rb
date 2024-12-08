@@ -1,5 +1,12 @@
 # config/routes.rb
 Rails.application.routes.draw do
+
+   # Devise user routes
+   devise_for :users
+
+  # Routes for Users controller with ID constraint
+  resources :users, only: [:index, :show, :edit, :update], constraints: { id: /\d+/ }
+
   # Routes for Like resource
   resources :likes, only: [:index, :show, :create, :update, :destroy], param: :path_id
 
@@ -11,12 +18,6 @@ Rails.application.routes.draw do
 
   # Routes for Photo resource
   resources :photos, only: [:index, :show, :create, :update, :destroy], param: :path_id
-
-  # Devise user routes
-  devise_for :users
-
-  # Routes for Users controller
-  resources :users, only: [:index, :show, :edit, :update]
 
   # Custom route for follow requests
   post 'insert_follow_request', to: 'follow_requests#create'

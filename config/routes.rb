@@ -16,7 +16,7 @@ Rails.application.routes.draw do
   devise_for :users
 
   # Routes for Users controller
-  resources :users, only: [:show, :edit, :update]
+  resources :users, only: [:index, :show, :edit, :update]
 
   # Custom route for follow requests
   post 'insert_follow_request', to: 'follow_requests#create'

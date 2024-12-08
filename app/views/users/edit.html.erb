@@ -1,0 +1,51 @@
+<!-- app/views/users/edit.html.erb -->
+<h2>Edit User</h2>
+
+<p>Editing user: <%= current_user.username %></p>
+
+<%= form_for(current_user, url: user_registration_path, html: { id: 'edit_user' }) do |f| %>
+  <div class="field">
+    <%= f.label :email %><br>
+    <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
+  </div>
+
+  <div class="field">
+    <%= f.label :username %><br>
+    <%= f.text_field :username %>
+  </div>
+
+  <div class="field">
+    <%= f.label :private %><br>
+    <%= f.hidden_field :private, value: 0, autocomplete: "off" %>
+    <%= f.check_box :private, value: 1 %>
+  </div>
+
+  <div class="field">
+    <%= f.label :password %> <i>(leave blank if you don't want to change it)</i><br>
+    <%= f.password_field :password, autocomplete: "new-password" %>
+    <br>
+    <em>6 characters minimum</em>
+  </div>
+
+  <div class="field">
+    <%= f.label :password_confirmation %><br>
+    <%= f.password_field :password_confirmation, autocomplete: "new-password" %>
+  </div>
+
+  <div class="field">
+    <%= f.label :current_password %> <i>(we need your current password to confirm your changes)</i><br>
+    <%= f.password_field :current_password, autocomplete: "current-password" %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit "Update", data: { disable_with: "Update" } %>
+  </div>
+<% end %>
+
+<h3>Cancel my account</h3>
+
+<div>Unhappy? 
+  <%= button_to "Cancel my account", user_registration_path, method: :delete, data: { confirm: "Are you sure?" } %>
+</div>
+
+<a href="<%= root_path %>">Back</a>

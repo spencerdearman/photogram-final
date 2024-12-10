@@ -1,0 +1,46 @@
+<h1>List of Photos</h1>
+
+<% if user_signed_in? %>
+  <%= form_with(model: Photo.new, local: true, html: { multipart: true }) do |form| %>
+    <%= form.label :image, 'Image' %>
+    <%= form.file_field :image %>
+    <%= form.label :caption, 'Caption' %>
+    <%= form.text_field :caption %>
+    <button type="submit" class="btn btn-info">Add Photo</button>
+<% end %>
+
+<% if @photos.blank? %>
+  <p>No photos to display.</p>
+<% else %>
+  <table border="1">
+    <thead>
+      <tr>
+        <th>Image</th>
+        <th>Owner</th>
+        <th>Caption</th>
+        <th>Posted</th>
+        <th>Likes</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @photos.each do |photo| %>
+        <tr>
+          <td>
+            <%= image_tag(photo.image? ? photo.image.url : "no_image_available.png", width: 100, height: 100) %>
+          </td>
+          <td>
+            <%= photo.owner&.username || 'Unknown' %>
+            </td>
+            <td><%= photo.caption || "No caption provided" %></td>
+            <td><%= photo.created_at ? time_ago_in_words(photo.created_at) + ' ago' : 'Unknown time' %></td>
+            <td><%= photo.likes.count %></td>
+            <td>
+              <%= link_to 'Show details', photo_path(photo), class: 'btn btn-secondary' %>
+            </td>
+          </tr>
+        <% end %>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>

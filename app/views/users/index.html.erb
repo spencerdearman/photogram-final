@@ -24,18 +24,22 @@
             <% else %>
               <% follow_status = @follow_statuses[user.id] %>
               <% if follow_status == 'accepted' %>
-                <%= link_to 'Unfollow', unfollow_user_path(user), method: :delete, class: 'btn btn-danger', data: { turbo: false } %>
+                <%= button_to 'Unfollow', 
+                              unfollow_follow_requests_path(id: user.id), 
+                              method: :delete, 
+                              class: 'btn btn-danger',
+                              data: { turbo: false } %>
               <% elsif follow_status == 'pending' %>
                 <div>
                   Request sent.
-                  <%= link_to 'Cancel', cancel_follow_user_path(user), method: :delete, class: 'btn btn-warning', data: { turbo: false } %>
+                  <%= link_to 'Cancel', cancel_request_follow_requests_path(id: user.id), method: :delete, class: 'btn btn-warning', data: { turbo: false } %>
                 </div>
               <% else %>
-                  <%= form_with(url: follow_follow_requests_path, method: :post, local: true) do |form| %>
-                    <%= form.hidden_field :recipient_id, value: user.id %>
-                    <button type="submit" class="btn btn-primary">Follow</button>
-                  <% end %>
+                <%= form_with(url: follow_follow_requests_path, method: :post, local: true) do |form| %>
+                  <%= form.hidden_field :recipient_id, value: user.id %>
+                  <button type="submit" class="btn btn-primary">Follow</button>
                 <% end %>
+              <% end %>
             <% end %>
           </td>
         <% end %>

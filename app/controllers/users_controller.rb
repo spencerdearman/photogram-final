@@ -8,28 +8,24 @@ class UsersController < ApplicationController
   end
 
   def show
-    # Redirect if user not found
-    unless @user
-      redirect_to root_path, alert: "User not found."
-      return
+    @user = User.find(params[:id])
+    @show_section = params[:show_section] || "own"
+
+    @photos = case @show_section
+    when "own"
+      @user.photos.order(created_at: :desc)  # Show user's own photos by default
+    when "liked_photos"
+      @user.likes.includes(:photo).order(created_at: :desc).map(&:photo)
+    when "feed"
+      followed_user_ids = @user.sent_follow_requests
+                              .where(status: 'accepted')
+                              .pluck(:recipient_id)
+      Photo.where(user_id: followed_user_ids).order(created_at: :desc)
+    when "discover"
+      Photo.where(user: User.discoverable_by(@user))
     end
 
-    # Redirect if the profile is private and access is unauthorized
-    if @user.private?
-      if !user_signed_in?
-        redirect_to root_path, alert: "You must be signed in to view this user's profile."
-        return
-      elsif !@user.received_follow_requests.where(sender: current_user, status: 'accepted').exists?
-        redirect_to root_path, alert: "You do not have permission to view this user's profile."
-        return
-      end
-    end
-
-    @follow_statuses = user_signed_in? ? current_user.sent_follow_requests.pluck(:recipient_id, :status).to_h : {}
-
-    # Determine which section to display
-    @show_section = params[:show_section] || 'own'
-    @photos = fetch_photos(@show_section)
+    @follow_statuses = current_user ? get_follow_statuses : {}
   end
 
   private

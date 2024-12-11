@@ -2,12 +2,16 @@ class CommentsController < ApplicationController
   before_action :set_photo
 
   def create
-    @comment = @photo.comments.build(comment_params) # Associate comment with the photo
-    @comment.author_id = current_user.id
+    @comment = Comment.new(
+      body: params[:body],
+      photo_id: params[:photo_id],
+      author_id: current_user.id
+    )
+  
     if @comment.save
-      redirect_to photo_path(@comment.photo), notice: "Comment added successfully."
+      redirect_to photo_path(@comment.photo_id)
     else
-      redirect_to photo_path(@comment.photo), alert: "Failed to add comment."
+      redirect_back(fallback_location: photos_path)
     end
   end
 

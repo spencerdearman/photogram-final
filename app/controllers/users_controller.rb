@@ -37,8 +37,8 @@ class UsersController < ApplicationController
     @show_section = params[:show_section] || 'own'
     @photos = case @show_section
     when 'feed'
-      followed_users_ids = @user.following.pluck(:id)
-      Photo.where(owner_id: followed_users_ids).order(created_at: :desc) if followed_users_ids.any?
+      followed_users_ids = current_user.sent_follow_requests.where(status: 'accepted').pluck(:recipient_id)
+      Photo.where(owner_id: followed_users_ids).order(created_at: :desc)
     when 'liked_photos'
       @user.liked_photos
     when 'discover'

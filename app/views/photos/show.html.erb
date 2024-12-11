@@ -88,15 +88,18 @@
 
   <% if user_signed_in? %>
     <h3>Add a New Comment</h3>
-    <%= form_with(model: [@photo, Comment.new], local: true) do |form| %>
-      <div>
-        <%= form.label :body, "Comment" %>
-        <%= form.text_area :body, placeholder: "Enter your comment" %>
-      </div>
-      <div>
-        <%= form.submit "Add Comment", class: "btn btn-primary" %>
-      </div>
-    <% end %>
+    <div class="comment-form">
+      <%= form_with(url: photo_comments_path(@photo), local: true) do |f| %>
+        <div class="mb-3">
+          <%= f.label :body, "Comment" %>
+          <%= f.text_area :body, class: "form-control" %>
+        </div>
+
+        <button>
+          Add comment
+        </button>
+      <% end %>
+    </div>
   <% else %>
     <p>You must be signed in to add a comment.</p>
   <% end %>

@@ -1,47 +1,54 @@
 <h1>List of Users</h1>
 
-<table border='1'>
+<table border="1">
   <thead>
     <tr>
       <th>Username</th>
       <th>Private?</th>
-      <th>Show details</th>
+      <th>Show Details</th>
       <% if user_signed_in? %>
-        <th>Follow</th>
+        <th>Actions</th>
       <% end %>
     </tr>
   </thead>
   <tbody>
     <% @users.each do |user| %>
       <tr>
+        <!-- Username -->
         <td><%= user.username %></td>
+        
+        <!-- Private status -->
         <td><%= user.private ? 'Yes' : 'No' %></td>
-        <td><%= link_to 'Show details', user_path(user), class: "btn btn-secondary" %></td>
+        
+        <!-- Link to user details -->
+        <td>
+          <%= link_to 'Show details', user_path(user), class: 'btn btn-secondary' %>
+        </td>
+        
+        <!-- Follow/Unfollow/Cancel buttons -->
         <% if user_signed_in? && current_user != user %>
           <td>
             <% follow_status = @follow_statuses[user.id] %>
-            <% if follow_status == 'accepted' %>
+            <% case follow_status %>
+            <% when 'accepted' %>
               <%= button_to 'Unfollow', 
                             unfollow_follow_requests_path(id: user.id), 
                             method: :delete, 
-                            class: 'btn btn-danger',
-                            data: { turbo: false } %>
-            <% elsif follow_status == 'pending' %>
+                            class: 'btn btn-danger' %>
+            <% when 'pending' %>
               <div>
                 Request sent
                 <%= link_to 'Cancel', 
                             cancel_request_follow_requests_path(id: user.id), 
                             method: :delete, 
-                            class: 'btn btn-warning',
-                            data: { turbo: false } %>
+                            class: 'btn btn-warning' %>
               </div>
             <% else %>
-              <%= button_to 'Follow',
+              <%= button_to 'Follow', 
                             follow_follow_requests_path,
-                            params: { recipient_id: user.id },
-                            method: :post,
-                            class: 'btn btn-primary',
-                            data: { turbo: false } %>
+                            params: { recipient_id: user.id }, 
+                            method: :post, 
+                            class: 'btn btn-primary' %>
             <% end %>
           </td>
         <% end %>

@@ -3,7 +3,10 @@ class PhotosController < ApplicationController
   skip_before_action(:authenticate_user!, { :only => [:index] })
 
   def index
-    @photos = Photo.joins(:owner).where(users: { private: false })
+    @photos = Photo.includes(:owner)
+                   .joins(:owner)
+                   .where(users: { private: false })
+                   .order(created_at: :desc)
   end
 
   def show

@@ -7,6 +7,7 @@
     <%= form.label :caption, 'Caption' %>
     <%= form.text_field :caption %>
     <button type="submit" class="btn btn-info">Add Photo</button>
+  <% end %>
 <% end %>
 
 <% if @photos.blank? %>
@@ -27,19 +28,14 @@
       <% @photos.each do |photo| %>
         <tr>
           <td>
-            <%= image_tag(photo.image? ? photo.image.url : "no_image_available.png", width: 100, height: 100) %>
+            <%= image_tag photo.image.url if photo.image? %>
           </td>
-          <td>
-            <%= photo.owner&.username || 'Unknown' %>
-            </td>
-            <td><%= photo.caption || "No caption provided" %></td>
-            <td><%= photo.created_at ? time_ago_in_words(photo.created_at) + ' ago' : 'Unknown time' %></td>
-            <td><%= photo.likes.count %></td>
-            <td>
-              <%= link_to 'Show details', photo_path(photo), class: 'btn btn-secondary' %>
-            </td>
-          </tr>
-        <% end %>
+          <td><%= photo.owner&.username %></td>
+          <td><%= photo.caption %></td>
+          <td><%= time_ago_in_words(photo.created_at) %> ago</td>
+          <td><%= photo.likes.count %></td>
+          <td><%= link_to 'Show details', photo_path(photo), class: 'btn btn-secondary' %></td>
+        </tr>
       <% end %>
     </tbody>
   </table>
